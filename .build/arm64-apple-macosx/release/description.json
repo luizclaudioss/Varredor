@@ -1,0 +1,333 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.Varredor-arm64-apple-macosx-release.module" : {
+      "executable" : "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "fileList" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/sources",
+      "importPath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/AppUninstallPlan.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/AppUninstallerService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/VarredorApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/UninstallPreviewSheet.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "Varredor",
+      "moduleOutputPath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Modules/Varredor.swiftmodule",
+      "objects" : [
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.swift.o",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.swift.o",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.swift.o",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.swift.o",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.swift.o",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.swift.o",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-whole-module-optimization",
+        "-num-threads",
+        "10",
+        "-serialize-diagnostics",
+        "-O",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "Varredor_main",
+        "-swift-version",
+        "5",
+        "-I",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-L",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-plugin-path",
+        "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "varredor"
+      ],
+      "outputFileMapPath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Modules/Varredor.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/AppUninstallPlan.swift",
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift",
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/AppUninstallerService.swift",
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift",
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/VarredorApp.swift",
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift",
+        "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/UninstallPreviewSheet.swift"
+      ],
+      "tempsPath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build",
+      "wholeModuleOptimization" : true
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "Varredor" : [
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "-module-name",
+      "Varredor",
+      "-package-name",
+      "varredor",
+      "-c",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/AppUninstallPlan.swift",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/AppUninstallerService.swift",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/VarredorApp.swift",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift",
+      "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/UninstallPreviewSheet.swift",
+      "-I",
+      "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-whole-module-optimization",
+      "-num-threads",
+      "10",
+      "-serialize-diagnostics",
+      "-O",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "Varredor_main",
+      "-swift-version",
+      "5",
+      "-I",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-L",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-plugin-path",
+      "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "varredor",
+      "-driver-use-frontend-path",
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "Varredor" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/AppUninstallPlan.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/AppUninstallerService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/VarredorApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/UninstallPreviewSheet.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/sources"
+    },
+    "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.product/Objects.LinkFileList"
+    },
+    "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt"
+    }
+  }
+}

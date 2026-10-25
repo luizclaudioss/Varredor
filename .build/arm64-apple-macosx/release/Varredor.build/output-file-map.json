@@ -1,0 +1,49 @@
+{
+  "": {
+    "dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/Varredor.d",
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/Varredor.o",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/primary.swiftdeps"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/AppUninstallPlan.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/AppUninstallerService.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/VarredorApp.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/UninstallPreviewSheet.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/UninstallPreviewSheet.dia"
+  }
+}
