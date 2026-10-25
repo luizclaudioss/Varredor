@@ -5,6 +5,12 @@ APP_NAME="Varredor"
 BUNDLE_ID="com.luirdi.Varredor"
 APP_BUNDLE="${APP_NAME}.app"
 
+if [ ! -f "AppIcon.icns" ]; then
+    echo "🎨 Gerando ícone da vassoura (AppIcon.icns)..."
+    swift generate_icon.swift
+    iconutil -c icns AppIcon.iconset -o AppIcon.icns
+fi
+
 echo "🔨 Compilando ${APP_NAME} (Release)..."
 swift build -c release
 
@@ -20,6 +26,7 @@ mkdir -p "${APP_BUNDLE}/Contents/Resources"
 
 cp "${BIN_PATH}" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
 chmod +x "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
+cp "AppIcon.icns" "${APP_BUNDLE}/Contents/Resources/AppIcon.icns"
 
 cat > "${APP_BUNDLE}/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -34,12 +41,16 @@ cat > "${APP_BUNDLE}/Contents/Info.plist" <<EOF
     <string>${APP_NAME}</string>
     <key>CFBundleDisplayName</key>
     <string>${APP_NAME}</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundleIconName</key>
+    <string>AppIcon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.1.0</string>
+    <string>1.2.0</string>
     <key>CFBundleVersion</key>
-    <string>2</string>
+    <string>3</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
@@ -65,5 +76,6 @@ EOF
 echo -n "APPL????" > "${APP_BUNDLE}/Contents/PkgInfo"
 
 codesign --force --deep --sign - "${APP_BUNDLE}"
+touch "${APP_BUNDLE}"
 
-echo "✅ ${APP_BUNDLE} gerado com sucesso em: $(pwd)/${APP_BUNDLE}"
+echo "✅ ${APP_BUNDLE} gerado com sucesso com ícone em: $(pwd)/${APP_BUNDLE}"
