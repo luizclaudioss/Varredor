@@ -1,7 +1,11 @@
 /Users/luirdi/Github/Varredor/Sources/Varredor/Models/AppUninstallPlan.swift
+/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ArchiveModels.swift
 /Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift
 /Users/luirdi/Github/Varredor/Sources/Varredor/Services/AppUninstallerService.swift
+/Users/luirdi/Github/Varredor/Sources/Varredor/Services/ArchiveExtractorService.swift
 /Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift
 /Users/luirdi/Github/Varredor/Sources/Varredor/VarredorApp.swift
+/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ArchiveCompressorView.swift
+/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ArchiveUnpackerView.swift
 /Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift
 /Users/luirdi/Github/Varredor/Sources/Varredor/Views/UninstallPreviewSheet.swift

@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var scanner = FileScannerService()
+    @ObservedObject private var archiveExtractor = ArchiveExtractorService.shared
 
     // Filter & Sort states
     @State private var minDaysInactive: Int = 30
@@ -100,6 +101,67 @@ struct ContentView: View {
     }
 
     var body: some View {
+        Group {
+            switch archiveExtractor.activeModule {
+            case .cleaner:
+                cleanerSplitView
+            case .unpacker:
+                ArchiveUnpackerView(extractor: archiveExtractor)
+            case .compressor:
+                ArchiveCompressorView(extractor: archiveExtractor)
+            }
+        }
+        .navigationTitle(
+            {
+                switch archiveExtractor.activeModule {
+                case .cleaner:
+                    return "Varredor — Arquivos e Programas Inativos"
+                case .unpacker:
+                    return "Varredor — Descompactador Universal (.zip, .rar, .7z, .iso, .tar)"
+                case .compressor:
+                    return "Varredor — Compactador (.zip, .7z, .tar.xz, .tar.gz, .iso, .dmg)"
+                }
+            }()
+        )
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Picker("Módulo", selection: $archiveExtractor.activeModule) {
+                    ForEach(AppModule.allCases) { module in
+                        Label(module.rawValue, systemImage: module.icon)
+                            .tag(module)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .frame(width: 440)
+            }
+        }
+        .onOpenURL { url in
+            archiveExtractor.openArchivesFromFinder([url], autoSwitchModule: true)
+        }
+        .onAppear {
+            if scanner.scannedItems.isEmpty && !scanner.isScanning {
+                scanner.startScan(includeHidden: includeHidden)
+            }
+        }
+        .sheet(isPresented: $showUninstallSheet) {
+            if let plan = activeUninstallPlan {
+                UninstallPreviewSheet(
+                    plan: plan,
+                    mode: $uninstallMode,
+                    isExecuting: isExecutingUninstall,
+                    onCancel: {
+                        showUninstallSheet = false
+                        activeUninstallPlan = nil
+                    },
+                    onConfirm: {
+                        confirmAndExecuteUninstall(plan: plan)
+                    }
+                )
+            }
+        }
+    }
+
+    private var cleanerSplitView: some View {
         NavigationSplitView {
             sidebarView
                 .navigationSplitViewColumnWidth(min: 265, ideal: 285, max: 340)
@@ -121,28 +183,6 @@ struct ContentView: View {
                 bottomActionBar
             }
             .background(Color(NSColor.windowBackgroundColor))
-        }
-        .navigationTitle("Varredor — Arquivos e Programas Inativos")
-        .onAppear {
-            if scanner.scannedItems.isEmpty && !scanner.isScanning {
-                scanner.startScan(includeHidden: includeHidden)
-            }
-        }
-        .sheet(isPresented: $showUninstallSheet) {
-            if let plan = activeUninstallPlan {
-                UninstallPreviewSheet(
-                    plan: plan,
-                    mode: $uninstallMode,
-                    isExecuting: isExecutingUninstall,
-                    onCancel: {
-                        showUninstallSheet = false
-                        activeUninstallPlan = nil
-                    },
-                    onConfirm: {
-                        confirmAndExecuteUninstall(plan: plan)
-                    }
-                )
-            }
         }
     }
 
@@ -474,6 +514,9 @@ struct ContentView: View {
                         onOpen: {
                             scanner.openItem(item)
                         },
+                        onInspectArchive: ArchiveFormat.isSupportedArchive(item.url) ? {
+                            archiveExtractor.openArchivesFromFinder([item.url], autoSwitchModule: true)
+                        } : nil,
                         onTrash: {
                             prepareUninstall(for: [item])
                         }
@@ -520,6 +563,15 @@ struct ContentView: View {
             }
             .buttonStyle(.bordered)
             .disabled(filteredAndSortedItems.isEmpty)
+
+            if !selectedItemsList.isEmpty {
+                Button {
+                    archiveExtractor.openItemsForCompression(selectedItemsList.map(\.url), autoSwitchModule: true)
+                } label: {
+                    Label("Compactar Selecionados (\(selectedItemsList.count))", systemImage: "archivebox.fill")
+                }
+                .buttonStyle(.bordered)
+            }
 
             Button(role: .destructive) {
                 prepareUninstall(for: selectedItemsList)
@@ -740,6 +792,7 @@ struct ScannedItemRow: View {
     let onToggleSelect: () -> Void
     let onReveal: () -> Void
     let onOpen: () -> Void
+    let onInspectArchive: (() -> Void)?
     let onTrash: () -> Void
 
     private var badgeColor: Color {
@@ -829,6 +882,18 @@ struct ScannedItemRow: View {
 
             // Quick Actions
             HStack(spacing: 4) {
+                if let inspectArchive = onInspectArchive {
+                    Button {
+                        inspectArchive()
+                    } label: {
+                        Image(systemName: "archivebox.fill")
+                            .foregroundStyle(.blue)
+                            .frame(width: 26, height: 26)
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Inspecionar / Descompactar no Varredor")
+                }
+
                 Button {
                     onReveal()
                 } label: {

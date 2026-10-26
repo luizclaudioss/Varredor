@@ -14,6 +14,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
     }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        Task { @MainActor in
+            ArchiveExtractorService.shared.openArchivesFromFinder(urls, autoSwitchModule: true)
+            NSApplication.shared.activate(ignoringOtherApps: true)
+        }
+    }
 }
 
 @main

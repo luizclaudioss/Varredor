@@ -48,15 +48,53 @@ cat > "${APP_BUNDLE}/Contents/Info.plist" <<EOF
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.2.0</string>
+    <string>1.3.0</string>
     <key>CFBundleVersion</key>
-    <string>3</string>
+    <string>4</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSSupportsAutomaticGraphicsSwitching</key>
     <true/>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Arquivo Compactado</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>zip</string>
+                <string>rar</string>
+                <string>7z</string>
+                <string>iso</string>
+                <string>dmg</string>
+                <string>cdr</string>
+                <string>img</string>
+                <string>tar</string>
+                <string>tgz</string>
+                <string>gz</string>
+                <string>tbz</string>
+                <string>tbz2</string>
+                <string>bz2</string>
+                <string>txz</string>
+                <string>xz</string>
+                <string>xar</string>
+                <string>pkg</string>
+                <string>cab</string>
+                <string>cpio</string>
+                <string>deb</string>
+                <string>rpm</string>
+                <string>cbz</string>
+                <string>cbr</string>
+                <string>cb7</string>
+            </array>
+        </dict>
+    </array>
     <key>NSDesktopFolderUsageDescription</key>
     <string>O Varredor precisa acessar a pasta Mesa para identificar arquivos inativos.</string>
     <key>NSDocumentsFolderUsageDescription</key>

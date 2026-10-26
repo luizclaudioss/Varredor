@@ -10,6 +10,12 @@
     "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.swiftdeps",
     "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallPlan.dia"
   },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ArchiveModels.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveModels.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveModels~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveModels.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveModels.dia"
+  },
   "/Users/luirdi/Github/Varredor/Sources/Varredor/Models/ScannedItem.swift": {
     "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem.swift.o",
     "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ScannedItem~partial.swiftmodule",
@@ -22,6 +28,12 @@
     "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.swiftdeps",
     "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/AppUninstallerService.dia"
   },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/ArchiveExtractorService.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveExtractorService.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveExtractorService~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveExtractorService.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveExtractorService.dia"
+  },
   "/Users/luirdi/Github/Varredor/Sources/Varredor/Services/FileScannerService.swift": {
     "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService.swift.o",
     "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/FileScannerService~partial.swiftmodule",
@@ -33,6 +45,18 @@
     "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp~partial.swiftmodule",
     "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.swiftdeps",
     "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/VarredorApp.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ArchiveCompressorView.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveCompressorView.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveCompressorView~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveCompressorView.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveCompressorView.dia"
+  },
+  "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ArchiveUnpackerView.swift": {
+    "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveUnpackerView.swift.o",
+    "swiftmodule": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveUnpackerView~partial.swiftmodule",
+    "swift-dependencies": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveUnpackerView.swiftdeps",
+    "diagnostics": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ArchiveUnpackerView.dia"
   },
   "/Users/luirdi/Github/Varredor/Sources/Varredor/Views/ContentView.swift": {
     "object": "/Users/luirdi/Github/Varredor/.build/arm64-apple-macosx/release/Varredor.build/ContentView.swift.o",

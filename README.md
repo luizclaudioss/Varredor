@@ -20,6 +20,11 @@
   - **Mover para a Lixeira**: Envia os arquivos e aplicativos selecionados com segurança para a Lixeira do macOS (permitindo restauração caso necessário) e exibe o espaço total liberado.
   - **Mostrar no Finder**: Localiza qualquer item diretamente no Finder com um clique.
   - **Exportação CSV**: Exporta o relatório completo dos itens inativos.
+- **📦 Descompactador Universal Integrado**:
+  - Suporte nativo para **`.zip`, `.rar`, `.7z`, `.iso`, `.dmg`, `.tar`, `.tar.gz` (`.tgz`), `.tar.bz2` (`.tbz2`), `.tar.xz` (`.txz`), `.gz`, `.bz2`, `.xz`, `.xar`, `.pkg`, `.cab`, `.cpio`, `.deb`, `.rpm`**.
+  - **Drag & Drop + Associação no Finder**: Arraste pacotes para a janela ou abra diretamente pelo Finder ("Abrir Com" -> Varredor).
+  - **Inspetor de Conteúdo Interno**: Veja todos os arquivos e pastas dentro do arquivo compactado antes de extrair, pesquise por nome, visualize arquivos individuais rapidamente e extraia **tudo** ou **apenas os itens selecionados**.
+  - **Suporte a Senha e Fila em Lote (Batch)**: Detecta automaticamente arquivos criptografados/protegidos por senha e permite descompactar múltiplos arquivos de uma só vez.
 
 ---
 
