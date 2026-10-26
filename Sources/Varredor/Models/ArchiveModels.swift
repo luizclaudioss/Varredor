@@ -28,9 +28,11 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
     case tarGz = "TAR.GZ"
     case tarBz2 = "TAR.BZ2"
     case tarXz = "TAR.XZ"
+    case tarZst = "TAR.ZST"
     case gzip = "GZ"
     case bzip2 = "BZ2"
     case xz = "XZ"
+    case zst = "ZST"
     case xar = "XAR / PKG"
     case cab = "CAB"
     case cpio = "CPIO"
@@ -46,15 +48,15 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
         case .rar: return "purple"
         case .sevenZip: return "indigo"
         case .iso, .dmg: return "orange"
-        case .tar, .tarGz, .tarBz2, .tarXz: return "teal"
-        case .gzip, .bzip2, .xz: return "cyan"
+        case .tar, .tarGz, .tarBz2, .tarXz, .tarZst: return "teal"
+        case .gzip, .bzip2, .xz, .zst: return "cyan"
         case .xar, .cab, .cpio, .deb, .rpm, .other: return "gray"
         }
     }
 
     var isSingleStreamCompression: Bool {
         switch self {
-        case .gzip, .bzip2, .xz:
+        case .gzip, .bzip2, .xz, .zst:
             return true
         default:
             return false
@@ -75,8 +77,8 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
         "rar", "cbr",
         "7z", "cb7",
         "iso", "cdr", "dmg", "img",
-        "tar", "tgz", "tbz", "tbz2", "txz", "tlz",
-        "gz", "bz2", "xz",
+        "tar", "tgz", "tbz", "tbz2", "txz", "tlz", "tzst",
+        "gz", "bz2", "xz", "zst",
         "xar", "pkg", "cab", "cpio", "deb", "rpm", "lha", "lzh"
     ]
 
@@ -88,6 +90,8 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
             return .tarBz2
         } else if name.hasSuffix(".tar.xz") || name.hasSuffix(".txz") || name.hasSuffix(".tar.lzma") || name.hasSuffix(".tlz") {
             return .tarXz
+        } else if name.hasSuffix(".tar.zst") || name.hasSuffix(".tzst") {
+            return .tarZst
         }
 
         let ext = url.pathExtension.lowercased()
@@ -110,6 +114,8 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
             return .bzip2
         case "xz":
             return .xz
+        case "zst":
+            return .zst
         case "xar", "pkg":
             return .xar
         case "cab":
@@ -127,7 +133,7 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
 
     static func isSupportedArchive(_ url: URL) -> Bool {
         let name = url.lastPathComponent.lowercased()
-        if name.hasSuffix(".tar.gz") || name.hasSuffix(".tar.bz2") || name.hasSuffix(".tar.xz") {
+        if name.hasSuffix(".tar.gz") || name.hasSuffix(".tar.bz2") || name.hasSuffix(".tar.xz") || name.hasSuffix(".tar.zst") {
             return true
         }
         return supportedExtensions.contains(url.pathExtension.lowercased())
@@ -137,7 +143,7 @@ enum ArchiveFormat: String, CaseIterable, Identifiable, Sendable {
     static func baseArchiveName(for url: URL) -> String {
         let filename = url.lastPathComponent
         let lower = filename.lowercased()
-        let compoundSuffixes = [".tar.gz", ".tar.bz2", ".tar.xz", ".tar.lzma", ".tar.z"]
+        let compoundSuffixes = [".tar.gz", ".tar.bz2", ".tar.xz", ".tar.zst", ".tar.lzma", ".tar.z"]
         for suffix in compoundSuffixes {
             if lower.hasSuffix(suffix) {
                 return String(filename.dropLast(suffix.count))
@@ -300,14 +306,15 @@ enum EntrySortField: String, CaseIterable, Identifiable {
 // MARK: - Compression (Create Archive) Models
 
 enum CompressionFormat: String, CaseIterable, Identifiable, Sendable {
-    case zip = "ZIP (.zip)"
-    case sevenZip = "7-Zip (.7z)"
-    case tarXz = "TAR.XZ (.tar.xz)"
+    case sevenZip = "7-Zip Sólido (.7z)"
+    case tarXz = "TAR.XZ Ultra (.tar.xz)"
+    case tarZst = "Zstandard (.tar.zst)"
+    case zip = "ZIP Universal (.zip)"
+    case dmg = "Imagem macOS (.dmg)"
     case tarGz = "TAR.GZ (.tar.gz)"
     case tarBz2 = "TAR.BZ2 (.tar.bz2)"
     case tar = "TAR (.tar)"
     case iso = "ISO 9660 (.iso)"
-    case dmg = "Imagem macOS (.dmg)"
 
     var id: String { rawValue }
 
@@ -316,6 +323,7 @@ enum CompressionFormat: String, CaseIterable, Identifiable, Sendable {
         case .zip: return "zip"
         case .sevenZip: return "7z"
         case .tarXz: return "tar.xz"
+        case .tarZst: return "tar.zst"
         case .tarGz: return "tar.gz"
         case .tarBz2: return "tar.bz2"
         case .tar: return "tar"
@@ -329,6 +337,7 @@ enum CompressionFormat: String, CaseIterable, Identifiable, Sendable {
         case .zip: return "ZIP"
         case .sevenZip: return "7Z"
         case .tarXz: return "TAR.XZ"
+        case .tarZst: return "TAR.ZST"
         case .tarGz: return "TAR.GZ"
         case .tarBz2: return "TAR.BZ2"
         case .tar: return "TAR"
@@ -339,31 +348,31 @@ enum CompressionFormat: String, CaseIterable, Identifiable, Sendable {
 
     var subtitle: String {
         switch self {
-        case .zip:
-            return "Compatibilidade universal (Windows, macOS, Linux) • Suporta Senha AES-256"
         case .sevenZip:
-            return "Alta taxa de compressão LZMA • Ideal para arquivos grandes"
+            return "🔥 Campeão de redução • Bloco Sólido LZMA2 (Dicionário 128 MB) + Senha AES-256"
         case .tarXz:
-            return "Compressão máxima LZMA2/XZ • Excelente economia de espaço"
+            return "🔥 Compressão Extrema LZMA2 (Preset 9e + Dicionário 128 MB + Filtro ARM64)"
+        case .tarZst:
+            return "⚡ Zstandard Nível 22 Ultra (Janela 128 MB) • Altíssima redução e descompressão veloz"
+        case .zip:
+            return "Compatibilidade universal • Modo Ultra com 15 passadas (ou motor LZMA) + Senha AES-256"
+        case .dmg:
+            return "Imagem de disco macOS com compressão LZMA (ULMO) • Até 35% menor que DMG padrão"
         case .tarGz:
-            return "Rápido e padrão em sistemas UNIX/Linux/macOS (GZip)"
+            return "Rápido e universal para sistemas UNIX/Linux/macOS (GZip Nível 9)"
         case .tarBz2:
-            return "Compressão BZip2 clássica"
+            return "Compressão BZip2 em blocos de 900 KB"
         case .tar:
             return "Agrupamento instantâneo sem compressão"
         case .iso:
             return "Imagem de disco óptica universal ISO-9660"
-        case .dmg:
-            return "Imagem de disco nativa do macOS (UDZO) • Suporta Senha AES-256"
         }
     }
 
     var supportsPasswordOutOfTheBox: Bool {
         switch self {
-        case .zip, .dmg:
+        case .zip, .dmg, .sevenZip:
             return true
-        case .sevenZip:
-            return ArchiveExtractorService.findExecutable(["7zz", "7z", "7za"]) != nil
         default:
             return false
         }
@@ -371,10 +380,11 @@ enum CompressionFormat: String, CaseIterable, Identifiable, Sendable {
 }
 
 enum CompressionLevel: String, CaseIterable, Identifiable, Sendable {
-    case store = "Apenas Armazenar (Mais Rápido)"
-    case fast = "Rápido"
-    case normal = "Equilibrado (Recomendado)"
-    case maximum = "Máximo (Menor Tamanho)"
+    case store = "Apenas Armazenar (Instantâneo)"
+    case fast = "Rápido (Menor uso de CPU)"
+    case normal = "Equilibrado"
+    case maximum = "Máximo (Nível 9)"
+    case ultra = "🔥 Ultra / Extrema (Máxima Redução)"
 
     var id: String { rawValue }
 
@@ -384,6 +394,7 @@ enum CompressionLevel: String, CaseIterable, Identifiable, Sendable {
         case .fast: return 1
         case .normal: return 6
         case .maximum: return 9
+        case .ultra: return 9
         }
     }
 }

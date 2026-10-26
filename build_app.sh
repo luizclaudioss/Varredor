@@ -22,11 +22,16 @@ killall "${APP_NAME}" 2>/dev/null || true
 echo "📦 Empacotando ${APP_BUNDLE}..."
 rm -rf "${APP_BUNDLE}"
 mkdir -p "${APP_BUNDLE}/Contents/MacOS"
-mkdir -p "${APP_BUNDLE}/Contents/Resources"
+mkdir -p "${APP_BUNDLE}/Contents/Resources/bin"
 
 cp "${BIN_PATH}" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
 chmod +x "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
 cp "AppIcon.icns" "${APP_BUNDLE}/Contents/Resources/AppIcon.icns"
+
+if [ -f "/opt/homebrew/bin/7zz" ]; then
+    cp "/opt/homebrew/bin/7zz" "${APP_BUNDLE}/Contents/Resources/bin/7zz"
+    chmod +x "${APP_BUNDLE}/Contents/Resources/bin/7zz"
+fi
 
 cat > "${APP_BUNDLE}/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>

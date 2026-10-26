@@ -100,6 +100,18 @@ struct ArchiveCompressorView: View {
                         }
                     }
                     .font(.subheadline)
+
+                    if extractor.compressionFormat == .zip && extractor.compressionLevel == .ultra {
+                        Toggle("Motor LZMA no .zip (Até 35% menor)", isOn: $extractor.useLZMAInZip)
+                            .font(.caption)
+                        Text(
+                            extractor.useLZMAInZip
+                                ? "Usa algoritmo LZMA de 64 MB dentro do .zip (requer Varredor ou 7-Zip p/ abrir)."
+                                : "Usa Deflate Ultra de 15 passadas (100% compatível com o Finder do Mac e Windows)."
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    }
                 }
             }
 

@@ -8,6 +8,10 @@
 		<data>
 		0FyTpeewZiqQl0VgCsldgANeWys=
 		</data>
+		<key>Resources/bin/7zz</key>
+		<data>
+		8Ioq7u+QKNhmhscLz2ZLRk5RRt0=
+		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
@@ -16,6 +20,13 @@
 			<key>hash2</key>
 			<data>
 			+M8SoMj1Zedavh/oGpP5Bi/mvv0CVKRYvqOub5gvElc=
+			</data>
+		</dict>
+		<key>Resources/bin/7zz</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			YOSv1o2GpLcJ4veZP7RWaVW7dlmn+NYqZjkN/FDHQso=
 			</data>
 		</dict>
 	</dict>

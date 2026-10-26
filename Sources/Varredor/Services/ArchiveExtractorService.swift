@@ -32,8 +32,9 @@ final class ArchiveExtractorService: ObservableObject {
 
     // MARK: - Compression (Create Archive) State
     @Published var compressionItems: [CompressionSourceItem] = []
-    @Published var compressionFormat: CompressionFormat = .zip
-    @Published var compressionLevel: CompressionLevel = .normal
+    @Published var compressionFormat: CompressionFormat = .sevenZip
+    @Published var compressionLevel: CompressionLevel = .ultra
+    @Published var useLZMAInZip: Bool = false
     @Published var compressionBatchMode: CompressionBatchMode = .singleArchive
     @Published var compressionOutputName: String = ""
     @Published var compressionDestinationMode: ArchiveDestinationMode = .sameAsArchive
@@ -57,12 +58,16 @@ final class ArchiveExtractorService: ObservableObject {
     // MARK: - External Engine Discovery
 
     nonisolated static func findExecutable(_ names: [String]) -> String? {
-        let searchPaths = [
+        var searchPaths: [String] = []
+        if let bundledBin = Bundle.main.resourceURL?.appendingPathComponent("bin").path {
+            searchPaths.append(bundledBin)
+        }
+        searchPaths.append(contentsOf: [
             "/opt/homebrew/bin",
             "/usr/local/bin",
             "/usr/bin",
             "/bin"
-        ]
+        ])
         let fm = FileManager.default
         for name in names {
             for dir in searchPaths {
@@ -77,11 +82,14 @@ final class ArchiveExtractorService: ObservableObject {
 
     var availableEnginesSummary: String {
         var list = ["libarchive (bsdtar)", "unzip", "hdiutil", "gzip / bzip2"]
-        if Self.findExecutable(["xz"]) != nil {
-            list.append("xz")
-        }
         if Self.findExecutable(["7zz", "7z", "7za"]) != nil {
-            list.append("7-Zip")
+            list.append("7-Zip Ultra (LZMA2 128MB)")
+        }
+        if Self.findExecutable(["xz"]) != nil {
+            list.append("XZ 9e Extreme")
+        }
+        if Self.findExecutable(["zstd"]) != nil {
+            list.append("Zstandard Ultra-22")
         }
         if Self.findExecutable(["unar"]) != nil {
             list.append("The Unarchiver (unar)")
@@ -247,8 +255,22 @@ final class ArchiveExtractorService: ObservableObject {
                 modificationDate: nil,
                 permissions: "-rw-r--r--"
             )
-            let engine = format == .gzip ? "gzip" : (format == .bzip2 ? "bzip2" : "xz / liblzma")
+            let engine = format == .gzip ? "gzip" : (format == .bzip2 ? "bzip2" : (format == .zst ? "zstd" : "xz / liblzma"))
             return InspectionResult(entries: [entry], isEncrypted: false, engineUsed: engine)
+        }
+
+        // 1b. Handle .tar.zst via zstd -> bsdtar pipe if zstd is available
+        if format == .tarZst, let zstdBin = findExecutable(["zstd"]) {
+            let pipeOut = runCommand("/bin/zsh", arguments: [
+                "-c",
+                "\"\(zstdBin)\" -dc --long=31 \"$1\" | /usr/bin/bsdtar -tvf -",
+                "--",
+                url.path
+            ])
+            if pipeOut.exitCode == 0 {
+                let entries = parseBsdtarOutput(pipeOut.stdout)
+                return InspectionResult(entries: entries, isEncrypted: false, engineUsed: "Zstandard + bsdtar")
+            }
         }
 
         // 2. Check if ZIP has encrypted entries via zipinfo
@@ -747,7 +769,7 @@ final class ArchiveExtractorService: ObservableObject {
             )
         }
 
-        // 1. Single-stream compressed files (.gz, .bz2, .xz)
+        // 1. Single-stream compressed files (.gz, .bz2, .xz, .zst)
         if format.isSingleStreamCompression {
             let outputFileName = ArchiveFormat.baseArchiveName(for: archiveURL)
             let outputFileURL = targetDir.appendingPathComponent(outputFileName)
@@ -759,11 +781,13 @@ final class ArchiveExtractorService: ObservableObject {
                 toolPath = "/usr/bin/bzip2"
             case .xz:
                 toolPath = findExecutable(["xz"]) ?? "/usr/bin/bsdtar"
+            case .zst:
+                toolPath = findExecutable(["zstd"]) ?? "/usr/bin/bsdtar"
             default:
                 toolPath = "/usr/bin/gzip"
             }
 
-            if toolPath.hasSuffix("xz") || toolPath.hasSuffix("gzip") || toolPath.hasSuffix("bzip2") {
+            if toolPath.hasSuffix("xz") || toolPath.hasSuffix("gzip") || toolPath.hasSuffix("bzip2") || toolPath.hasSuffix("zstd") {
                 let ok = decompressSingleStream(toolPath: toolPath, inputURL: archiveURL, outputURL: outputFileURL)
                 if ok {
                     return ExtractionWorkerResult(outputDirectoryURL: createSubfolder ? targetDir : outputFileURL, extractedCount: 1)
@@ -773,6 +797,21 @@ final class ArchiveExtractorService: ObservableObject {
                 outputDirectoryURL: targetDir,
                 errorMessage: "Falha ao descomprimir stream \(format.rawValue)."
             )
+        }
+
+        // 1b. .tar.zst extraction via zstd -> bsdtar pipe
+        if format == .tarZst, let zstdBin = findExecutable(["zstd"]) {
+            let keepFlag = overwrite ? "" : "-k"
+            let pipeOut = runCommand("/bin/zsh", arguments: [
+                "-c",
+                "\"\(zstdBin)\" -dc --long=31 \"$1\" | /usr/bin/bsdtar -xf - \(keepFlag) -C \"$2\"",
+                "--",
+                archiveURL.path,
+                targetDir.path
+            ])
+            if pipeOut.exitCode == 0 {
+                return ExtractionWorkerResult(outputDirectoryURL: targetDir, extractedCount: expectedCount)
+            }
         }
 
         // 2. Primary engine: bsdtar (supports .zip, .rar, .7z, .tar, .tar.gz, .tar.bz2, .tar.xz, .iso, .xar, .cpio, .cab)
@@ -1147,6 +1186,7 @@ final class ArchiveExtractorService: ObservableObject {
         let itemsSnapshot = compressionItems
         let format = compressionFormat
         let level = compressionLevel
+        let zipLZMA = useLZMAInZip
         let batchMode = compressionBatchMode
         let destDir = resolveCompressionDestinationDir()
         let excludeMeta = excludeMacOSMetadata
@@ -1160,11 +1200,16 @@ final class ArchiveExtractorService: ObservableObject {
         let effectiveBaseName = rawOutputName.isEmpty ? fallbackBaseName : rawOutputName
         let totalOriginalBytes = totalCompressionInputBytes
 
+        if level == .ultra {
+            compressionStepText = "Aplicando compressão Ultra/Extrema (Dicionário amplo + Multi-Core)..."
+        }
+
         let workerResult = await Task.detached(priority: .userInitiated) {
             Self.performCompressionBatch(
                 items: itemsSnapshot,
                 format: format,
                 level: level,
+                useLZMAInZip: zipLZMA,
                 batchMode: batchMode,
                 destinationDir: destDir,
                 baseArchiveName: effectiveBaseName,
@@ -1225,6 +1270,7 @@ final class ArchiveExtractorService: ObservableObject {
         items: [CompressionSourceItem],
         format: CompressionFormat,
         level: CompressionLevel,
+        useLZMAInZip: Bool,
         batchMode: CompressionBatchMode,
         destinationDir: URL,
         baseArchiveName: String,
@@ -1247,6 +1293,7 @@ final class ArchiveExtractorService: ObservableObject {
                 outputURL: outURL,
                 format: format,
                 level: level,
+                useLZMAInZip: useLZMAInZip,
                 excludeMacOSMeta: excludeMacOSMeta,
                 password: password
             ) {
@@ -1268,6 +1315,7 @@ final class ArchiveExtractorService: ObservableObject {
                     outputURL: outURL,
                     format: format,
                     level: level,
+                    useLZMAInZip: useLZMAInZip,
                     excludeMacOSMeta: excludeMacOSMeta,
                     password: password
                 ) {
@@ -1284,17 +1332,26 @@ final class ArchiveExtractorService: ObservableObject {
         outputURL: URL,
         format: CompressionFormat,
         level: CompressionLevel,
+        useLZMAInZip: Bool,
         excludeMacOSMeta: Bool,
         password: String?
     ) -> String? {
-        // 1. macOS Disk Image (.dmg) via hdiutil
+        // 1. macOS Disk Image (.dmg) via hdiutil (uses ULMO LZMA compression in Maximum/Ultra!)
         if format == .dmg {
             let volName = outputURL.deletingPathExtension().lastPathComponent
             var args = ["create", "-volname", volName]
             for src in sourceURLs {
                 args.append(contentsOf: ["-srcfolder", src.path])
             }
-            let dmgFormat = (level == .store) ? "UDRO" : "UDZO"
+            let dmgFormat: String
+            switch level {
+            case .store:
+                dmgFormat = "UDRO"
+            case .fast, .normal:
+                dmgFormat = "UDZO" // zlib
+            case .maximum, .ultra:
+                dmgFormat = "ULMO" // macOS LZMA Ultra compression (~35% smaller DMG)
+            }
             args.append(contentsOf: ["-ov", "-format", dmgFormat])
             if let p = password, !p.isEmpty {
                 args.append(contentsOf: ["-encryption", "AES-256", "-stdinpass"])
@@ -1309,27 +1366,128 @@ final class ArchiveExtractorService: ObservableObject {
             return nil
         }
 
-        // 2. 7-Zip with password if 7zz is available
-        if format == .sevenZip, let p = password, !p.isEmpty,
-           let sevenZipBin = findExecutable(["7zz", "7z", "7za"]) {
-            var args = ["a", "-t7z", "-mx=\(level.numericLevel)", "-mhe=on", "-p\(p)", "-y", outputURL.path]
+        // 2. 7-Zip (.7z) via 7zz when available — True Solid LZMA2 with up to 128 MB dictionary & 273 fast bytes!
+        if format == .sevenZip, let sevenZipBin = findExecutable(["7zz", "7z", "7za"]) {
+            var args: [String] = ["a", "-t7z"]
+            switch level {
+            case .store:
+                args.append(contentsOf: ["-mx=0"])
+            case .fast:
+                args.append(contentsOf: ["-m0=lzma2", "-mx=1", "-ms=off", "-mmt=on"])
+            case .normal:
+                args.append(contentsOf: ["-m0=lzma2", "-mx=5", "-ms=on", "-mmt=on"])
+            case .maximum:
+                args.append(contentsOf: ["-m0=lzma2", "-mx=9", "-mfb=128", "-md=64m", "-ms=on", "-mmt=on"])
+            case .ultra:
+                args.append(contentsOf: ["-m0=lzma2", "-mx=9", "-mfb=273", "-md=128m", "-ms=on", "-mmt=on"])
+            }
+            if let p = password, !p.isEmpty {
+                args.append(contentsOf: ["-p\(p)", "-mhe=on"])
+            }
             if excludeMacOSMeta {
                 args.append(contentsOf: ["-xr!.DS_Store", "-xr!__MACOSX", "-xr!._*"])
             }
+            args.append("-y")
+            args.append(outputURL.path)
             for src in sourceURLs {
                 args.append(src.path)
             }
             let out = runCommand(sevenZipBin, arguments: args)
-            if out.exitCode != 0 {
-                let msg = out.stderr.trimmingCharacters(in: .whitespacesAndNewlines)
-                return msg.isEmpty ? "Falha ao criar arquivo .7z protegido." : msg
+            if out.exitCode == 0 {
+                return nil
+            }
+        }
+
+        // 3. Ultra ZIP (.zip) via 7zz when available (15-pass Ultra Deflate or LZMA-in-ZIP + AES-256)
+        if format == .zip, let sevenZipBin = findExecutable(["7zz", "7z", "7za"]) {
+            var args: [String] = ["a", "-tzip"]
+            switch level {
+            case .store:
+                args.append("-mx=0")
+            case .fast:
+                args.append(contentsOf: ["-mm=Deflate", "-mx=1", "-mmt=on"])
+            case .normal:
+                args.append(contentsOf: ["-mm=Deflate", "-mx=5", "-mmt=on"])
+            case .maximum:
+                args.append(contentsOf: ["-mm=Deflate", "-mx=9", "-mfb=128", "-mpass=10", "-mmt=on"])
+            case .ultra:
+                if useLZMAInZip {
+                    args.append(contentsOf: ["-mm=LZMA", "-mx=9", "-md=64m", "-mfb=273", "-mmt=on"])
+                } else {
+                    args.append(contentsOf: ["-mm=Deflate", "-mx=9", "-mfb=258", "-mpass=15", "-mmt=on"])
+                }
+            }
+            if let p = password, !p.isEmpty {
+                args.append(contentsOf: ["-p\(p)", "-mem=AES256"])
+            }
+            if excludeMacOSMeta {
+                args.append(contentsOf: ["-xr!.DS_Store", "-xr!__MACOSX", "-xr!._*"])
+            }
+            args.append("-y")
+            args.append(outputURL.path)
+            for src in sourceURLs {
+                args.append(src.path)
+            }
+            let out = runCommand(sevenZipBin, arguments: args)
+            if out.exitCode == 0 {
+                return nil
+            }
+        }
+
+        // 4. TAR.XZ (.tar.xz) via bsdtar piped into standalone `xz` (supports 9e Extreme + 128 MB dictionary + ARM64 BCJ filter + Multi-Threading!)
+        if format == .tarXz, let xzBin = findExecutable(["xz"]) {
+            let xzFlags: String
+            switch level {
+            case .store:
+                xzFlags = "-0 -T0"
+            case .fast:
+                xzFlags = "-1 -T0"
+            case .normal:
+                xzFlags = "-6 -T0"
+            case .maximum:
+                xzFlags = "-9 -e -T0"
+            case .ultra:
+                xzFlags = "-T0 --arm64 --lzma2=preset=9e,dict=128MiB,nice=273,depth=512"
+            }
+            if let err = runTarPipedToCompressor(
+                sourceURLs: sourceURLs,
+                outputURL: outputURL,
+                excludeMacOSMeta: excludeMacOSMeta,
+                compressorCommand: "\"\(xzBin)\" \(xzFlags)"
+            ) {
+                return err
             }
             return nil
         }
 
-        // 3. Universal libarchive / bsdtar creation for .zip, .7z, .tar.xz, .tar.gz, .tar.bz2, .tar, .iso
-        var bsdArgs: [String] = ["-cf", outputURL.path]
+        // 5. TAR.ZST (.tar.zst) via bsdtar piped into `zstd` (supports --ultra -22 --long=27!)
+        if format == .tarZst, let zstdBin = findExecutable(["zstd"]) {
+            let zstdFlags: String
+            switch level {
+            case .store:
+                zstdFlags = "-1 -T0"
+            case .fast:
+                zstdFlags = "-3 -T0"
+            case .normal:
+                zstdFlags = "-9 -T0"
+            case .maximum:
+                zstdFlags = "-19 -T0 --long=27"
+            case .ultra:
+                zstdFlags = "--ultra -22 -T0 --long=27"
+            }
+            if let err = runTarPipedToCompressor(
+                sourceURLs: sourceURLs,
+                outputURL: outputURL,
+                excludeMacOSMeta: excludeMacOSMeta,
+                compressorCommand: "\"\(zstdBin)\" \(zstdFlags) -q"
+            ) {
+                return err
+            }
+            return nil
+        }
 
+        // 6. Universal libarchive / bsdtar fallback for .zip, .7z, .tar.xz, .tar.gz, .tar.bz2, .tar, .iso
+        var bsdArgs: [String] = ["-cf", outputURL.path]
         var optionTokens: [String] = []
 
         switch format {
@@ -1346,16 +1504,18 @@ final class ArchiveExtractorService: ObservableObject {
             }
         case .sevenZip:
             bsdArgs.append(contentsOf: ["--format", "7zip"])
+            optionTokens.append("7zip:compression=lzma2")
             optionTokens.append("7zip:compression-level=\(level.numericLevel)")
-        case .tarXz:
+        case .tarXz, .tarZst:
             bsdArgs.append("-J")
-            optionTokens.append("xz:compression-level=\(level.numericLevel)")
+            optionTokens.append("compression-level=\(level.numericLevel)")
+            optionTokens.append("threads=0")
         case .tarGz:
             bsdArgs.append("-z")
-            optionTokens.append("gzip:compression-level=\(max(1, level.numericLevel))")
+            optionTokens.append("compression-level=\(max(1, level.numericLevel))")
         case .tarBz2:
             bsdArgs.append("-j")
-            optionTokens.append("bzip2:compression-level=\(max(1, level.numericLevel))")
+            optionTokens.append("compression-level=\(max(1, level.numericLevel))")
         case .tar:
             bsdArgs.append(contentsOf: ["--format", "pax"])
         case .iso:
@@ -1412,6 +1572,41 @@ final class ArchiveExtractorService: ObservableObject {
             return errStr.isEmpty ? "Falha ao criar arquivo compactado." : errStr
         }
 
+        return nil
+    }
+
+    nonisolated private static func runTarPipedToCompressor(
+        sourceURLs: [URL],
+        outputURL: URL,
+        excludeMacOSMeta: Bool,
+        compressorCommand: String
+    ) -> String? {
+        var tarArgs: [String] = []
+        if excludeMacOSMeta {
+            tarArgs.append(contentsOf: [
+                "--exclude=.DS_Store",
+                "--exclude=__MACOSX",
+                "--exclude=._*"
+            ])
+        }
+        for src in sourceURLs {
+            let parentDir = src.deletingLastPathComponent().path
+            let itemName = src.lastPathComponent
+            tarArgs.append(contentsOf: ["-C", parentDir, itemName])
+        }
+
+        // Escape arguments safely for zsh
+        let quotedTarArgs = tarArgs.map { arg in
+            "'" + arg.replacingOccurrences(of: "'", with: "'\\''") + "'"
+        }.joined(separator: " ")
+        let quotedOut = "'" + outputURL.path.replacingOccurrences(of: "'", with: "'\\''") + "'"
+        let script = "COPYFILE_DISABLE=1 /usr/bin/bsdtar -cf - \(quotedTarArgs) | \(compressorCommand) > \(quotedOut)"
+
+        let out = runCommand("/bin/zsh", arguments: ["-o", "pipefail", "-c", script])
+        if out.exitCode != 0 {
+            let err = out.stderr.trimmingCharacters(in: .whitespacesAndNewlines)
+            return err.isEmpty ? "Falha na pipeline de compressão." : err
+        }
         return nil
     }
 
